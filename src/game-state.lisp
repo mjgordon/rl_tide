@@ -1,15 +1,15 @@
 (in-package :rl)
 
-(defparameter *game-state* nil)
+(defparameter *world* nil)
 
-(defstruct world-state
+(defstruct world
   current-map
   player
   entities
   offset)
 
-(defun make-world-state-new ()
-  (make-world-state :current-map (make-game-map-test)
+(defun make-world-new ()
+  (make-world :current-map (make-game-map-test)
 		    :player (make-player-new)
 		    :entities ()
 		    :offset (cons 0 0)))
@@ -32,8 +32,7 @@
 (defun state-setup ()
   (setup-cell-types)
   (setup-entity-types)
-  (setf *game-state* (make-world-state-new))
-  (format t "~a~%" (world-state-offset *game-state*))
+  (setf *world* (make-world-new))
   (state-title-screen))
 
 (defun state-title-screen ()
@@ -70,39 +69,39 @@
 	      ((:8 :KEYPAD-8 :UP) (setf delta '(0 -1)))
 	      ((:9 :KEYPAD-9) (setf delta '(1 -1))))
 	    (when delta
-	      (let ((map (world-state-current-map *game-state*))
-		    (player (world-state-player *game-state*)))
+	      (let ((map (world-current-map *world*))
+		    (player (world-player *world*)))
 	      (move-entity-delta map player (first delta) (second delta))
 	      (map-adjust-offset map (entity-position player) 20 20)))))
 	
 	#'state-game-normal)
-    (redraw-world-state *game-state* 0 0 20 20)))
+    (redraw-world *world* 0 0 20 20)))
 
   
-(defun redraw-world-state (state x y width height)
+(defun redraw-world (state x y width height)
   "Redraws the current map, starting at (x,y), cropped to (width,height)"
-  (let* ((map (world-state-current-map state))
-	 (offset (world-state-offset *game-state*)))
+  (let* ((map (world-current-map state))
+	 (offset (world-offset *world*)))
     (iterate-map map (lambda (map-x map-y id-x id-y)
 		       (let ((cell (get-cell map map-x map-y)))
 			 (when cell
 			   (set-char id-x id-y (map-cell-graphic cell)))))
 		 (+ x (car offset)) (+ y (cdr offset)) width height)
-    (draw-entity (world-state-player state))
+    (draw-entity (world-player state))
     (status-line-draw)))
     
 
 		 
 		 
 (defun draw-entity (entity)
-  (let ((x (- (car (entity-position entity)) (car (world-state-offset *game-state*)) ))
-	(y (- (cdr (entity-position entity)) (cdr (world-state-offset *game-state*)) )))
+  (let ((x (- (car (entity-position entity)) (car (world-offset *world*)) ))
+	(y (- (cdr (entity-position entity)) (cdr (world-offset *world*)) )))
     (set-char x y (entity-graphic entity))))
     
 
 (defun map-adjust-offset (map pos w h &optional (gutter 5))
   "Set the map offset for subwindow size (w,h) such that pos remains within gutter of the edges"
-  (let* ((current-offset (world-state-offset *game-state*))
+  (let* ((current-offset (world-offset *world*))
 	 (adj-x (- (car pos) (car current-offset)))
 	 (adj-y (- (cdr pos) (cdr current-offset))))
     ;; Adjust for position

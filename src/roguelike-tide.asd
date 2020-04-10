@@ -10,7 +10,7 @@
 	       (:file "game-map")
 	       (:file "generator")
 	       (:file "game-state")
-	       (:file "rogue")))
+	       (:file "main")))
 	      
 	       
 	       		      
