@@ -3,8 +3,8 @@
 (defmacro defstruct-type (parent-type &rest body)
   (let ((type-name (concatenate-symbols parent-type 'type))
 	(map-name (concatenate-symbols parent-type 'types))
-	(put-name (intern (string-upcase (format nil "put-~a-type" parent-type))))
-	(get-name (intern (string-upcase (format nil "get-~a-type" parent-type)))))
+	(put-name (intern (string-upcase (format nil "define-~a-type" parent-type))))
+	(get-name (intern (string-upcase (format nil "lookup-~a-type" parent-type)))))
     `(progn (defstruct ,type-name
 	      ,@body)
 	    ,@(mapcar (lambda (slot)

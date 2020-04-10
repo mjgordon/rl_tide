@@ -14,9 +14,9 @@
   
 (defun setup-entity-types ()
   ;;(create-struct-type "entity")
-  (put-entity-type 'player (make-entity-type :graphic #\@
+  (define-entity-type 'player (make-entity-type :graphic #\@
 					     :color-fore :white)))
 
 (defun make-player-new ()
-  (make-entity :entity-type (get-entity-type 'player)
+  (make-entity :entity-type (lookup-entity-type 'player)
 	       :position '(2 . 3)))
