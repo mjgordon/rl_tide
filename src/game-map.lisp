@@ -26,8 +26,8 @@
 					       :passable nil)))
 				      
 (defun make-game-map-test ()
-  (let ((map (make-game-map :width 10
-			    :height 10)))
+  (let ((map (make-game-map :width 200
+			    :height 200)))
     (setf (game-map-cells map) (make-list (game-map-size map)
 					  :initial-element (make-map-cell :map-cell-type (get-map-cell-type 'empty))))
     map))

@@ -9,7 +9,6 @@
 (defparameter *terminal-width* nil)
 (defparameter *terminal-height* nil)
 
-
 (defparameter *char-data* nil)
 (defparameter *fg-data* nil)
 (defparameter *bg-data* nil)
@@ -89,10 +88,14 @@
   '(#\q))
 
 (defun set-char (x y c &optional (color-pair '(:white :black)))
-  (let ((cell-id (cart-to-loc x y)))
-    (setf (aref *char-data* cell-id) (char-int c))
-    (setf (aref *fg-data* cell-id) (get-color-id (first color-pair)))
-    (setf (aref *bg-data* cell-id) (get-color-id (second color-pair)))))
+  (unless (or (>= x *terminal-width*)
+	      (>= y *terminal-height*)
+	      (< x 0)
+	      (< y 0))
+    (let ((cell-id (cart-to-loc x y)))
+      (setf (aref *char-data* cell-id) (char-int c))
+      (setf (aref *fg-data* cell-id) (get-color-id (first color-pair)))
+      (setf (aref *bg-data* cell-id) (get-color-id (second color-pair))))))
 
 (defun set-string (x y string &optional (color-pair '(:white :black)))
   (loop for c across string and idx from 0 do
