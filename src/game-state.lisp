@@ -49,6 +49,7 @@
 
 (defun state-game-normal ()
   (clear-screen)
+  ;; We redraw the world last, but want to return the result of the state-switch
   (prog1 
       (let ((event (get-event-specific (append (get-direction-keys) (get-quit-keys)))))
 	(case event
@@ -92,7 +93,8 @@
   (let* ((map (world-state-current-map state)))
     (iterate-map map
 		 (set-char x y (map-cell-graphic cell)))
-    (draw-entity (world-state-player state))))
+    (draw-entity (world-state-player state))
+    (status-line-draw)))
     
 
 		 

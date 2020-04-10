@@ -5,6 +5,7 @@
 	       (:file "struct-type")
 	       (:file "util")
 	       (:file "graphics")
+	       (:file "status-line")
 	       (:file "entity")
 	       (:file "game-map")
 	       (:file "game-state")

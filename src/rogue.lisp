@@ -50,6 +50,7 @@
 
 (defun receive-key (key)
   (setf *current-key* key)
+  (status-line-add key)
   (run-state))
 
 (defun get-event ()
