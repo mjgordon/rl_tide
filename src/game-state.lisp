@@ -10,9 +10,10 @@
 
 (defun make-world-new ()
   (make-world :current-map (make-game-map-test)
-		    :player (make-player-new)
-		    :entities ()
-		    :offset (cons 0 0)))
+	      :player (make-player-new)
+	      :entities ()
+	      :offset (cons 0 0)))
+  
 
 (defun get-direction-keys ()
   '(:0 :1 :2 :3 :4 :5 :6 :7 :8 :9
@@ -33,6 +34,7 @@
   (setup-cell-types)
   (setup-entity-types)
   (setf *world* (make-world-new))
+  (move-entity (world-current-map *world*) (world-player *world*) 2 3)
   (state-title-screen))
 
 (defun state-title-screen ()
@@ -72,22 +74,28 @@
 	      (let ((map (world-current-map *world*))
 		    (player (world-player *world*)))
 	      (move-entity-delta map player (first delta) (second delta))
-	      (map-adjust-offset map (entity-position player) 20 20)))))
+	      (map-adjust-offset map (entity-position player) 80 39)))))
 	
 	#'state-game-normal)
-    (redraw-world *world* 0 0 20 20)))
+    (redraw-world *world* 0 0 80 39)))
 
   
-(defun redraw-world (state x y width height)
+(defun redraw-world (world x y width height)
   "Redraws the current map, starting at (x,y), cropped to (width,height)"
-  (let* ((map (world-current-map state))
-	 (offset (world-offset *world*)))
+  (let* ((map (world-current-map world))
+	 (offset (world-offset world)))
     (iterate-map map (lambda (map-x map-y id-x id-y)
-		       (let ((cell (get-cell map map-x map-y)))
+		       (let* ((cell (get-cell map map-x map-y)))
 			 (when cell
-			   (set-char id-x id-y (map-cell-graphic cell)))))
+			   (let ((graphic (map-cell-graphic cell))
+				 (color-pair (list (map-cell-color-fore cell) (map-cell-color-back cell)))
+				 (entity (map-cell-entity cell)))
+			     (when entity
+			       (setf graphic (entity-graphic entity))
+			       (setf (first color-pair) (entity-color-fore entity)))
+			     (set-char id-x id-y graphic color-pair)))))
 		 (+ x (car offset)) (+ y (cdr offset)) width height)
-    (draw-entity (world-player state))
+    ;;(draw-entity (world-player world))
     (status-line-draw)))
     
 

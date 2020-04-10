@@ -7,7 +7,7 @@
 
 (defstruct map-cell
   map-cell-type
-  entities)
+  entity)
 
 (defstruct-type map-cell
   graphic
@@ -19,7 +19,11 @@
   (define-map-cell-type 'empty (make-map-cell-type :graphic #\.
 						   :color-fore :white
 						   :color-back :black
-						   :passable T))
+						   :passable t))
+  (define-map-cell-type 'grass (make-map-cell-type :graphic #\Space
+						   :color-fore :black
+						   :color-back :green
+						   :passable t))
   (define-map-cell-type 'wall (make-map-cell-type :graphic #\#
 						  :color-fore :white
 						  :color-back :black
@@ -28,15 +32,15 @@
 (defun make-game-map-blank (w h)
   (let ((map (make-game-map :width w
 			    :height h))
-	(empty-type (lookup-map-cell-type 'empty)))
+	(empty-type (lookup-map-cell-type 'grass)))
     (setf (game-map-cells map)
 	  (loop repeat (game-map-size map)
 	       collect (make-map-cell :map-cell-type empty-type)))
     map))
 				      
 (defun make-game-map-test ()
-  (let ((map (make-game-map-blank 50 50)))
-    (mapgen-rect map 0 0 50 50 'wall)
+  (let ((map (make-game-map-blank 80 80)))
+    (mapgen-rect map 0 0 80 80 'wall)
     map))
   
 
@@ -66,17 +70,21 @@ Calls function 'fun' with arguments (map-x map-y x-id y-id)"
 		       
 
 (defun move-entity-delta (map entity dx dy)
+  "Moves an entity relatively to its current position"
   (let ((nx (+ (car (entity-position entity)) dx))
 	(ny (+ (cdr (entity-position entity)) dy)))
     (move-entity map entity nx ny)))
 	
 
 (defun move-entity (map entity x y)
+  "Moves an entity to a specific location"
   (let ((cell (get-cell map x y)))
     (if (and cell
-	     (not (map-cell-entities cell))
+	     (not (map-cell-entity cell))
 	     (map-cell-passable cell))
-	(progn (setf (entity-position entity) (cons x y))
+	(progn (setf (map-cell-entity (get-cell map (car (entity-position entity)) (cdr (entity-position entity)))) nil)
+	       (setf (entity-position entity) (cons x y))
+	       (setf (map-cell-entity (get-cell map x y)) entity)
 	       (format nil "Moved to ~a ~a ~%" x y))
 	(format nil "Can't move there bro~%"))))
 

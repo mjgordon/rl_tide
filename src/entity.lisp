@@ -4,17 +4,16 @@
   entity-type
   position)
 
-
 (defstruct-type entity
   graphic
   color-fore)
 
-;;(defun get-entity-graphic (entity)
-  ;;(entity-type-graphic (entity-type entity)))
   
 (defun setup-entity-types ()
-  ;;(create-struct-type "entity")
   (define-entity-type 'player (make-entity-type :graphic #\@
+						:color-fore :white))
+  (define-entity-type 'orc (make-entity-type :graphic #\o
+
 					     :color-fore :white)))
 
 (defun make-player-new ()
