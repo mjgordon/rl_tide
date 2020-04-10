@@ -114,12 +114,14 @@
 		   (origin (gamekit:vec2 (* *char-width* (mod c 16)) (- 192 (* *char-height* (+ 1(floor (/ c 16)))))))
 		   (fg (aref *fg-data* loc))
 		   (bg (aref *bg-data* loc)))
-	      (gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint (get-color-vec bg))
-	      (gamekit:draw-image cart-pos
-				  (get-spritesheet-name fg)
-				  :origin origin
-				  :width *char-width*
-				  :height *char-height*)))))
+	      (unless (equal bg 0)
+		(gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint (get-color-vec bg)))
+	      (unless (equal c 0)
+		(gamekit:draw-image cart-pos
+				    (get-spritesheet-name fg)
+				    :origin origin
+				    :width *char-width*
+				    :height *char-height*))))))
 
 
 
