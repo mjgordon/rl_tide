@@ -39,8 +39,8 @@
     map))
 				      
 (defun make-game-map-test ()
-  (let ((map (make-game-map-blank 80 80)))
-    (mapgen-rect map 0 0 80 80 'wall)
+  (let ((map (make-game-map-blank 60 60)))
+    (mapgen-rect map 0 0 60 60 'wall)
     map))
   
 

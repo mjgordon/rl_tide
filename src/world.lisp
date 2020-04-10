@@ -1,6 +1,7 @@
 (in-package :rl)
 
 (defparameter *world* nil)
+(defparameter *timer* 1)
 
 (defstruct world
   current-map
@@ -13,6 +14,14 @@
 	      :player (make-player-new)
 	      :entities ()
 	      :offset (cons 0 0)))
+
+(defun world-add-entity (entity)
+  (setf (world-entities *world*) (cons entity (world-entities *world*)))
+  (setf (map-cell-entity (get-cell (world-current-map *world*)
+				   (car (entity-position entity))
+				   (cdr (entity-position entity))))
+	entity))
+			 
 
 (defun redraw-world (world x y width height)
   "Redraws the current map, starting at (x,y), cropped to (width,height)"
@@ -30,7 +39,8 @@
 			     (set-char id-x id-y graphic color-pair)))))
 		 (+ x (car offset)) (+ y (cdr offset)) width height)
     ;;(draw-entity (world-player world))
-    (status-line-draw)))
+    (status-line-draw)
+    (set-string 0 0 (format nil "Timer : ~a" *timer*))))
 
 (defun world-adjust-offset (world pos w h &optional (gutter 5))
   "Set the map offset for subwindow size (w,h) such that pos remains within gutter of the edges"
@@ -54,7 +64,7 @@
       (setf (car current-offset) 0))
     (when (< (cdr current-offset) 0)
       (setf (cdr current-offset) 0))
-    (when (>= (car current-offset) (- (game-map-width map) w 1))
-      (setf (car current-offset) (- (game-map-width map) w 1)))
-    (when (>= (cdr current-offset) (- (game-map-height map) h 1))
-      (setf (cdr current-offset) (- (game-map-height map) h 1)))))
+    (when (>= (car current-offset) (- (game-map-width map) w))
+      (setf (car current-offset) (- (game-map-width map) w )))
+    (when (>= (cdr current-offset) (- (game-map-height map) h))
+      (setf (cdr current-offset) (- (game-map-height map) h )))))

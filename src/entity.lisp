@@ -2,7 +2,8 @@
 
 (defstruct entity
   entity-type
-  position)
+  position
+  (speed 10))
 
 (defstruct-type entity
   graphic
@@ -13,7 +14,6 @@
   (define-entity-type 'player (make-entity-type :graphic #\@
 						:color-fore :white))
   (define-entity-type 'orc (make-entity-type :graphic #\o
-
 					     :color-fore :white)))
 
 (defun make-player-new ()

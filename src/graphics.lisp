@@ -37,13 +37,13 @@
 
 (defun get-color-vec (color)
   (cond ((equal color 0) (gamekit:vec4 0 0 0 1))
-	((equal color 1) (gamekit:vec4 1 0 0 1))
-	((equal color 2) (gamekit:vec4 0 1 0 1))
-	((equal color 3) (gamekit:vec4 1 1 0 1))
-	((equal color 4) (gamekit:vec4 0 0 1 1))
-	((equal color 5) (gamekit:vec4 1 0 1 1))
-	((equal color 6) (gamekit:vec4 0 1 1 1))
-	((equal color 7) (gamekit:vec4 1 1 1 1))))
+	((equal color 1) (gamekit:vec4 0.5 0 0 1))
+	((equal color 2) (gamekit:vec4 0 0.5 0 1))
+	((equal color 3) (gamekit:vec4 0.5 0.5 0 1))
+	((equal color 4) (gamekit:vec4 0 0 0.5 1))
+	((equal color 5) (gamekit:vec4 0.5 0 0.5 1))
+	((equal color 6) (gamekit:vec4 0 0.5 0.5 1))
+	((equal color 7) (gamekit:vec4 0.5 0.5 0.5 1))))
 
 (defun setup-terminal ()
   "Called at startup and after window resizing. Initializes the arrays that hold terminal data"
@@ -106,14 +106,16 @@
   (loop for y from 0 to (- *terminal-height* 1) do 
        (loop for x from 0 to (- *terminal-width* 1) do
 	    (let* ((loc (cart-to-loc x y))
-		   (cart-pos (gamekit:vec2 (* x *char-width*) (- *window-height* (* (+ y 1) *char-height*))))
+		   (cart-pos (gamekit:vec2 (* x *char-width*)
+					   (- *window-height* (* (+ y 1) *char-height*))))
 		   (c (aref *char-data* loc))
-		   (origin (gamekit:vec2 (* *char-width* (mod c 16)) (- 192 (* *char-height* (+ 1(floor (/ c 16)))))))
+		   (origin (gamekit:vec2 (* *char-width* (mod c 16))
+					 (- 192 (* *char-height* (+ 1 (floor (/ c 16)))))))
 		   (fg (aref *fg-data* loc))
 		   (bg (aref *bg-data* loc)))
 	      (unless (equal bg 0)
 		(gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint (get-color-vec bg)))
-	      (unless (equal c 0)
+	      (unless (or (equal c 0) (equal c 32))
 		(gamekit:draw-image cart-pos
 				    (get-spritesheet-name fg)
 				    :origin origin
