@@ -25,25 +25,27 @@
 	((equal color :cyan) 6)
 	((equal color :white) 7)))
 
-(defun get-spritesheet-name (color)
-  (cond ((equal color 0) :curses-black)
-	((equal color 1) :curses-red)
-	((equal color 2) :curses-green)
-	((equal color 3) :curses-yellow)
-	((equal color 4) :curses-blue)
-	((equal color 5) :curses-magenta)
-	((equal color 6) :curses-cyan)
-	((equal color 7) :curses-white)))
+(let ((spritesheet-names (list :curses-black
+			       :curses-red
+			       :curses-green
+			       :curses-yellow
+			       :curses-blue
+			       :curses-magenta
+			       :curses-cyan
+			       :curses-white)))
+  (defun get-spritesheet-name (id)
+    (nth id spritesheet-names)))
 
-(defun get-color-vec (color)
-  (cond ((equal color 0) (gamekit:vec4 0 0 0 1))
-	((equal color 1) (gamekit:vec4 0.5 0 0 1))
-	((equal color 2) (gamekit:vec4 0 0.5 0 1))
-	((equal color 3) (gamekit:vec4 0.5 0.5 0 1))
-	((equal color 4) (gamekit:vec4 0 0 0.5 1))
-	((equal color 5) (gamekit:vec4 0.5 0 0.5 1))
-	((equal color 6) (gamekit:vec4 0 0.5 0.5 1))
-	((equal color 7) (gamekit:vec4 0.5 0.5 0.5 1))))
+(let ((color-vecs (list (gamekit:vec4 0 0 0 1)
+			(gamekit:vec4 0.5 0 0 1)
+			(gamekit:vec4 0 0.5 0 1)
+			(gamekit:vec4 0.5 0.5 0 1)
+			(gamekit:vec4 0 0 0.5 1)
+			(gamekit:vec4 0.5 0 0.5 1)
+			(gamekit:vec4 0 0.5 0.5 1)
+			(gamekit:vec4 0.5 0.5 0.5 1))))
+  (defun get-color-vec (id)
+    (nth id color-vecs)))
 
 (defun setup-terminal ()
   "Called at startup and after window resizing. Initializes the arrays that hold terminal data"
