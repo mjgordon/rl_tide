@@ -1,5 +1,5 @@
-(asdf:defsystem :roguelike
-  :name "roguelike"
+(asdf:defsystem :roguelike-tide
+  :name "roguelike-tide"
   :depends-on(:trivial-gamekit :trivial-gamekit/distribution)
   :components ((:file "packages")
 	       (:file "struct-type")

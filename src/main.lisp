@@ -26,8 +26,6 @@
   (gamekit:define-image :curses-cyan "curses_cyan.png")
   (gamekit:define-image :curses-white "curses_white.png"))
 
-
-
 (defun startup()
   (gamekit:start 'gk-roguelike)
   (setup-terminal)
