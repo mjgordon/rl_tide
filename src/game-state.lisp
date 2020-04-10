@@ -84,15 +84,16 @@
 	  (otherwise
 	   #'state-game-normal)))
     
-    (redraw-world-state *game-state*)))
+    (redraw-world-state *game-state* 0 0 20 20)))
     
   
-
-(defun redraw-world-state (state)
-  "Redraws the current map"
+(defun redraw-world-state (state x y width height)
+  "Redraws the current map, starting at (x,y), cropped to (width,height)"
   (let* ((map (world-state-current-map state)))
-    (iterate-map map
-		 (set-char x y (map-cell-graphic cell)))
+    (iterate-map map (lambda (map-x map-y id-x id-y)
+		       (let ((cell (get-cell map map-x map-y)))
+			 (set-char id-x id-y (map-cell-graphic cell))))
+		 x y width height)
     (draw-entity (world-state-player state))
     (status-line-draw)))
     
