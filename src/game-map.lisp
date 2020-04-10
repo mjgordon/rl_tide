@@ -35,8 +35,8 @@
     map))
 				      
 (defun make-game-map-test ()
-  (let ((map (make-game-map-blank 200 200)))
-    (mapgen-rect map 0 0 200 200 'wall)
+  (let ((map (make-game-map-blank 50 50)))
+    (mapgen-rect map 0 0 50 50 'wall)
     map))
   
 
@@ -79,3 +79,6 @@ Calls function 'fun' with arguments (map-x map-y x-id y-id)"
 	(progn (setf (entity-position entity) (cons x y))
 	       (format nil "Moved to ~a ~a ~%" x y))
 	(format nil "Can't move there bro~%"))))
+
+  
+  

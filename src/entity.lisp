@@ -19,4 +19,4 @@
 
 (defun make-player-new ()
   (make-entity :entity-type (lookup-entity-type 'player)
-	       :position '(2 . 3)))
+	       :position (cons 2 3)))

@@ -79,13 +79,7 @@
 (defun cart-to-loc (x y)
   (+ x (* y *terminal-width*)))
     
-(defun get-direction-keys ()
-  '(:0 :1 :2 :3 :4 :5 :6 :7 :8 :9
-    :KEYPAD-1 :KEYPAD-2 :KEYPAD-3 :KEYPAD-4 :KEYPAD-5 :KEYPAD-6 :KEYPAD-7 :KEYPAD-8 :KEYPAD-9 :KEYPAD-0
-    :UP :DOWN :LEFT :RIGHT))
 
-(defun get-quit-keys ()
-  '(#\q))
 
 (defun set-char (x y c &optional (color-pair '(:white :black)))
   (unless (or (>= x *terminal-width*)
