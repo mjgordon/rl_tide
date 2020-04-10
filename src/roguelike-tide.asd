@@ -9,6 +9,7 @@
 	       (:file "entity")
 	       (:file "game-map")
 	       (:file "generator")
+	       (:file "world")
 	       (:file "game-state")
 	       (:file "main")))
 	      
