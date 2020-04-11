@@ -72,14 +72,15 @@
 
     ;; Tick once, then keep ticking until its the players turn again
     (world-tick *world*)
-    (loop until (= (mod *timer* (entity-speed (world-player *world*))) 0) do
+    (loop until (= (mod *timer* (entity-stat-speed (world-player *world*))) 0) do
 	 (world-tick *world*))
     
     (redraw-world *world* 0 0 80 39)))
 
 (defun world-tick (world)
   (mapc (lambda (entity)
-	  (when (= (mod *timer* (entity-speed entity)) 0)
+	  (when (and (entity-alive entity)
+		     (= (mod *timer* (entity-stat-speed entity)) 0))
 	    (entity-update entity)))
 	(world-entities world))
   (incf *timer*))

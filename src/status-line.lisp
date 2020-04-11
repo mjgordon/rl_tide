@@ -6,7 +6,9 @@
   
   (defun status-line-add (line)
     "Adds a new line of text to the message list"
-    (setf status-list (cons (write-to-string line) status-list))
+    (unless (stringp line)
+      (setf line (write-to-string line)))
+    (setf status-list (cons line status-list))
     (when (> (length status-list) 30)
       (setf (cdr (nthcdr 19 status-list)) nil)))
   

@@ -79,14 +79,26 @@ Calls function 'fun' with arguments (map-x map-y x-id y-id)"
 (defun move-entity (map entity x y)
   "Moves an entity to a specific location"
   (let ((cell (get-cell map x y)))
-    (if (and cell
-	     (not (map-cell-entity cell))
-	     (map-cell-passable cell))
-	(progn (setf (map-cell-entity (get-cell map (car (entity-position entity)) (cdr (entity-position entity)))) nil)
-	       (setf (entity-position entity) (cons x y))
-	       (setf (map-cell-entity (get-cell map x y)) entity)
-	       (format nil "Moved to ~a ~a ~%" x y))
-	(format nil "Can't move there bro~%"))))
+    (if (map-cell-entity cell)
+	(entity-attack entity (map-cell-entity cell))
+	(when (and cell
+		   (not (map-cell-entity cell))
+		   (map-cell-passable cell))
+	  (progn (setf (map-cell-entity (get-cell map (car (entity-position entity)) (cdr (entity-position entity)))) nil)
+		 (setf (entity-position entity) (cons x y))
+		 (setf (map-cell-entity (get-cell map x y)) entity))))))
+
+(defun entity-attack (entity target)
+  (decf (entity-hp target) (entity-stat-attack entity))
+  (cond ((equal (type-of entity) 'player)
+	 (status-line-add (format nil "You hit the ~a" (entity-name target))))
+	((equal (type-of target) 'player)
+	 (status-line-add (format nil "The ~a hits you" (entity-name entity))))
+	(t
+	 (status-line-add (format nil "The ~a hits the ~a" (entity-name entity) (entity-name target)))))
+  (when (<= (entity-hp target) 0)
+    (entity-die target)))
+
 
   
   

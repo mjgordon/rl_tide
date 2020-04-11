@@ -16,6 +16,8 @@
 	      :offset (cons 0 0)))
 
 (defun world-add-entity (entity)
+  "Finish setting up entity and properly adding it to the world"
+  (setf (entity-hp entity) (entity-default-hp entity))
   (setf (world-entities *world*) (cons entity (world-entities *world*)))
   (setf (map-cell-entity (get-cell (world-current-map *world*)
 				   (car (entity-position entity))
