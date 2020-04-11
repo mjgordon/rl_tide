@@ -6,7 +6,7 @@
 (gamekit:defgame rl:gk-roguelike () ()
 		   (:viewport-width *window-width*)
 		   (:viewport-height *window-height*)
-		   (:viewport-title "Roguelike"))
+		   (:viewport-title "TIDE"))
 
 (defun main()
   (setup)
@@ -31,7 +31,8 @@
   (setup-terminal)
   (setup-keyboard)
   (setf *redraw-flag* t)
-  (setf *current-state* #'state-setup))
+  (setf *current-state* #'state-setup)
+  (run-state))
 
 
 (defmethod gamekit:draw ((app gk-roguelike))
@@ -40,11 +41,9 @@
     (redraw)))
 
 
-
 (defun run-state ()
   (setf *current-state* (funcall *current-state*)))
   
-
 
 (defun receive-key (key)
   (setf *current-key* key)

@@ -1,5 +1,16 @@
 (in-package :rl)
 
+#|
+Provides a transparent way to cheaply associate static 'type' data with a struct, e.g. the graphics properties
+of a map cell or default stats of a mob
+
+Usage:
+After calling (defstruct mystruct), call (defstruct-type mystruct) with the static data items listed normally. 
+Accessors will be transparently created as though they were part of the normal struct. 
+Types can be created with (define-mystruct-type 'name (make-mystruct-type etc...))
+and accessed with (lookup-mystruct-type 'name)
+|#
+
 (defmacro defstruct-type (parent-type &rest body)
   (let ((type-name (concatenate-symbols parent-type 'type))
 	(map-name (concatenate-symbols parent-type 'types))
