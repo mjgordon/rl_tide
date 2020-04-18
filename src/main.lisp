@@ -12,8 +12,6 @@
   (setup)
   (startup))
 
-(defun distribute()
-  (trivial-gamekit.distribution:deliver :roguelike 'rl:gk-roguelike))
 
 (defun setup()
   (gamekit:register-resource-package :keyword "../data/")

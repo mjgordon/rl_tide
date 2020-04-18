@@ -72,3 +72,11 @@
       (setf (car current-offset) (- (game-map-width map) w )))
     (when (>= (cdr current-offset) (- (game-map-height map) h))
       (setf (cdr current-offset) (- (game-map-height map) h )))))
+
+(defun world-tick (world)
+  (mapc (lambda (entity)
+	  (when (and (entity-alive entity)
+		     (entity-ready-p entity))
+	    (entity-update entity)))
+	(world-entities world))
+  (incf *timer*))

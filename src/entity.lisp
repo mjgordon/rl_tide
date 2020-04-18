@@ -38,6 +38,9 @@
   (make-player :entity-type (lookup-entity-type 'player)
 	       :position (cons 2 3)))
 
+(defun entity-ready-p (entity)
+  (= (mod *timer* (entity-stat-speed entity))
+     0))
 
 (defun entity-update (entity)
   (case (entity-behavior entity)

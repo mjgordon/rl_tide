@@ -1,6 +1,6 @@
 (asdf:defsystem :roguelike-tide
   :name "roguelike-tide"
-  :depends-on(:trivial-gamekit :trivial-gamekit/distribution)
+  :depends-on(:trivial-gamekit)
   :components ((:file "packages")
 	       (:file "struct-type")
 	       (:file "util")
@@ -8,6 +8,7 @@
 	       (:file "status-line")
 	       (:file "entity")
 	       (:file "game-map")
+	       (:file "dmap")
 	       (:file "generator")
 	       (:file "world")
 	       (:file "game-state")

@@ -77,10 +77,4 @@
     
     (redraw-world *world* 0 0 80 39)))
 
-(defun world-tick (world)
-  (mapc (lambda (entity)
-	  (when (and (entity-alive entity)
-		     (= (mod *timer* (entity-stat-speed entity)) 0))
-	    (entity-update entity)))
-	(world-entities world))
-  (incf *timer*))
+
