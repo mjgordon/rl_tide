@@ -2,6 +2,7 @@
 
 (defparameter *world* nil)
 (defparameter *timer* 1)
+(defparameter *draw-dmap* t)
 
 (defstruct world
   current-map
@@ -38,8 +39,18 @@
 		     (let* ((cell (get-cell map map-x map-y)))
 		       (when cell
 			 (let ((graphic (map-cell-graphic cell))
-			       (color-pair (list (map-cell-color-fore cell) (map-cell-color-back cell)))
+			       ;;(color-pair (list (map-cell-color-fore cell) (map-cell-color-back cell)))
+			       (color-pair (list (map-cell-color-fore cell)
+						 (get-color-vec (get-color-id (map-cell-color-back cell)))))
 			       (entity (map-cell-entity cell)))
+			   (when *draw-dmap*
+			     (let ((dmap-value (aref (game-map-dmap map) map-x map-y)))
+			       (when (= dmap-value 9999)
+				 (setf dmap-value 255))
+			       (setf (second color-pair) (gamekit:vec4 (/ (- 255 dmap-value) 255.0)
+								      0
+								      (/ dmap-value 255.0)
+								      1))))
 			   (when entity
 			     (setf graphic (entity-graphic entity))
 			     (setf (first color-pair) (entity-color-fore entity)))
@@ -74,9 +85,10 @@
       (setf (cdr current-offset) (- (game-map-height map) h )))))
 
 (defun world-tick (world)
-  (mapc (lambda (entity)
-	  (when (and (entity-alive entity)
-		     (entity-ready-p entity))
-	    (entity-update entity)))
-	(world-entities world))
-  (incf *timer*))
+  (let ((dmap (map-generate-dmap (world-current-map world) (world-player world))))
+    (mapc (lambda (entity)
+	    (when (and (entity-alive entity)
+		       (entity-ready-p entity))
+	      (entity-update entity)))
+	  (world-entities world))
+    (incf *timer*)))

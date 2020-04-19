@@ -3,7 +3,8 @@
 (defstruct game-map
   width
   height
-  cells)
+  cells
+  dmap)
 
 (defstruct map-cell
   map-cell-type
@@ -88,17 +89,10 @@ Calls function 'fun' with arguments (map-x map-y x-id y-id)"
 		 (setf (entity-position entity) (cons x y))
 		 (setf (map-cell-entity (get-cell map x y)) entity))))))
 
-(defun entity-attack (entity target)
-  (decf (entity-hp target) (entity-stat-attack entity))
-  (cond ((equal (type-of entity) 'player)
-	 (status-line-add (format nil "You hit the ~a" (entity-name target))))
-	((equal (type-of target) 'player)
-	 (status-line-add (format nil "The ~a hits you" (entity-name entity))))
-	(t
-	 (status-line-add (format nil "The ~a hits the ~a" (entity-name entity) (entity-name target)))))
-  (when (<= (entity-hp target) 0)
-    (entity-die target)))
 
 
-  
-  
+(defun map-generate-dmap (game-map player)
+  (let ((dmap (make-dmap-blank game-map)))
+    (dmap-set-value dmap (entity-position player) 0)
+    (setf (game-map-dmap game-map) (dmap-scan dmap game-map))))
+

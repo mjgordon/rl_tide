@@ -48,8 +48,9 @@
 
 (defun state-game-normal ()
   (clear-screen)
-  ;; We redraw the world last, but want to return the result of the state-switch
+  ;; We resolve input first and ultimate return its result
   (prog1
+      ;; Resolve Input
       (let ((event (get-event)))
 	(when (member event (get-direction-keys))
 	  (let ((delta nil))
@@ -67,14 +68,15 @@
 		    (player (world-player *world*)))
 	      (move-entity-delta map player (first delta) (second delta))
 	      (world-adjust-offset *world* (entity-position player) 80 39)))))
-	
 	#'state-game-normal)
-
+    
+    ;; Update world
     ;; Tick once, then keep ticking until its the players turn again
     (world-tick *world*)
-    (loop until (= (mod *timer* (entity-stat-speed (world-player *world*))) 0) do
+    (loop until (entity-ready-p (world-player *world*)) do
 	 (world-tick *world*))
-    
+
+    ;; Draw world
     (redraw-world *world* 0 0 80 39)))
 
 

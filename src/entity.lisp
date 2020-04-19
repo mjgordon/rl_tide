@@ -64,9 +64,22 @@
     (set-string x 9 (format nil "Boots : ~a" (player-slot-boots player)))
     (set-string x 10 (format nil "Ring : ~a" (player-slot-ring player)))))
 
+
 (defun entity-die (entity)
   (setf (entity-alive entity) nil)
   (setf (map-cell-entity (get-cell (world-current-map *world*)
 				   (car (entity-position entity))
 				   (cdr (entity-position entity))))
 	nil))
+
+
+(defun entity-attack (entity target)
+  (decf (entity-hp target) (entity-stat-attack entity))
+  (cond ((equal (type-of entity) 'player)
+	 (status-line-add (format nil "You hit the ~a" (entity-name target))))
+	((equal (type-of target) 'player)
+	 (status-line-add (format nil "The ~a hits you" (entity-name entity))))
+	(t
+	 (status-line-add (format nil "The ~a hits the ~a" (entity-name entity) (entity-name target)))))
+  (when (<= (entity-hp target) 0)
+    (entity-die target)))

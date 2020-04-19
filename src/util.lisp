@@ -43,6 +43,13 @@
 (defun cart-to-loc (x y)
   (+ x (* y *terminal-width*)))
 
+(defun rect-bounds-p (x y w h)
+  (and (>= x 0)
+       (>= y 0)
+       (< x w)
+       (< y h)))
+
+;;; DEBUG
 
 (defun trace-dummy ())
 
@@ -51,8 +58,27 @@
   (trace-dummy)
   (untrace trace-dummy))
 
+(defun print-hash-table (ht)
+  (maphash (lambda (k v)
+	     (format t "~a : ~a~%" k v))
+	   ht))
+
+;;; SETS
+
+(defun array-set-counts (input)
+  (let ((counts (make-hash-table)))
+    (loop for i from 0 below (array-total-size input) do
+	 (let ((n (row-major-aref input i)))
+	   (if (gethash n counts)
+	       (incf (gethash n counts))
+	       (setf (gethash n counts) 1))))
+    counts))
+
 ;;; SYMBOLS
 
 (defun concatenate-symbols (a b)
   "Combines the string representation of a and b with a hyphen and returns a new symbol"
   (intern (concatenate 'string (symbol-name a) "-" (symbol-name b))))
+
+
+

@@ -33,10 +33,11 @@
     (let ((cell-id (cart-to-loc x y)))
       (setf (aref *char-data* cell-id) (char-int c))
       (setf (aref *fg-data* cell-id) (get-color-id (first color-pair)))
-      (setf (aref *bg-data* cell-id) (get-color-id (second color-pair))))))
+      ;;(setf (aref *bg-data* cell-id) (get-color-id (second color-pair)))
+      (setf (aref *bg-data* cell-id) (second color-pair)))))
 
 
-(defun set-string (x y string &optional (color-pair '(:white :black)))
+(defun set-string (x y string &optional (color-pair (list :white (get-color-vec (get-color-id :black)))))
   (loop for c across string and idx from 0 do
        (set-char (+ x idx) y c color-pair)))
 
@@ -45,7 +46,7 @@
   (let ((data-length (* *terminal-width* *terminal-height*)))
     (setf *char-data* (make-array data-length :initial-element 0))
     (setf *fg-data* (make-array data-length :initial-element (get-color-id :white)))
-    (setf *bg-data* (make-array data-length :initial-element (get-color-id :black)))))
+    (setf *bg-data* (make-array data-length :initial-element (get-color-vec (get-color-id :black))))))
   
 
 (defun redraw()
@@ -59,8 +60,9 @@
 					 (- 192 (* *char-height* (+ 1 (floor (/ c 16)))))))
 		   (fg (aref *fg-data* loc))
 		   (bg (aref *bg-data* loc)))
-	      (unless (equal bg 0)
-		(gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint (get-color-vec bg)))
+	      (unless (equal bg 4)
+		;;(gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint (get-color-vec bg)))
+		(gamekit:draw-rect cart-pos *char-width* *char-height* :fill-paint bg))
 	      (unless (or (equal c 0) (equal c 32))
 		(gamekit:draw-image cart-pos
 				    (get-spritesheet-name fg)
