@@ -30,7 +30,8 @@
   (redraw-map (world-current-map world) x y width height (world-offset world))
   (status-line-draw)
   (rl-graphics:set-string 0 0 (format nil "Timer : ~a" (read-timer)))
-  (draw-player-stats (world-player world)))
+  (draw-player-stats (world-player world))
+  (setf rl-graphics::*redraw-flag* 0))
 
 (defun redraw-map (map x y width height offset)
   "Draws the current map starting at (x,y), cropped to (width,height)"

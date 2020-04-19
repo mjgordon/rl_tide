@@ -28,15 +28,27 @@
   (gamekit:start 'gk-roguelike)
   (rl-graphics:setup-terminal)
   (setup-keyboard)
-  (setf rl-graphics::*redraw-flag* t)
+  (setf rl-graphics::*redraw-flag* 0)
   (setf *current-state* #'state-setup)
   (run-state))
 
 
 (defmethod gamekit:draw ((app gk-roguelike))
-  (when rl-graphics::*redraw-flag*
-    (gamekit:draw-rect (gamekit:vec2 0 0) rl-graphics::*window-width* rl-graphics::*window-height* :fill-paint (gamekit:vec4 0 0 0 1))
-    (rl-graphics:redraw)))
+  (gamekit:draw-rect (gamekit:vec2 0 0) rl-graphics::*window-width* rl-graphics::*window-height* :fill-paint (gamekit:vec4 0 0 0 1))
+  (rl-graphics:redraw))
+
+
+;; Probably a dirty dirty hack. The CL-BODGE draw loop will only clear and redraw (i.e. call gamekit:draw)
+;; if this method returns false. However, it will set the viewport transform and swap the buffers no matter what.
+;; Asking for a 'rerender' from the world draw function sets the flag to 0, and the flag is incremented every loop
+;; The system will redraw twice for every ask, to fill both of the swap buffers.
+;; I have no idea how handle-drawing is supposed to be used, but this appears to work, and the other idea i had
+;; involved saving and redrawing framebuffers as textures, which would have required a lot more digging. 
+(defmethod ge.app::handle-drawing(system canvas ui)
+  (prog1
+      (> rl-graphics::*redraw-flag* 1)
+    (incf rl-graphics::*redraw-flag*)))
+  
 
 
 (defun run-state ()

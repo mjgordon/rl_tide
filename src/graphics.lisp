@@ -19,7 +19,8 @@
 ;;these are stored as raw colors instead of ids. 
 (defparameter *bg-data* nil)
 
-(defparameter *redraw-flag* t)
+;; Part of a dirty dirty hack. See handle-drawing in main.lisp
+(defparameter *redraw-flag* 0)
 
 
 (defun setup-terminal ()
