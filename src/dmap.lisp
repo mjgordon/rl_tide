@@ -44,7 +44,7 @@
 	  ;;(format t "changes : ~a~%" changes)
 	  (dmap-scan output game-map t (+ iterations 1)))
 	(progn
-	  (print-hash-table (array-set-counts output))
+	  ;;(print-hash-table (array-set-counts output))
 	  ;;(format t "Iterations : ~a~%" iterations)
 	  output))))
 

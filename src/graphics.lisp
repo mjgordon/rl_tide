@@ -1,4 +1,4 @@
-(in-package :rl)
+(in-package :rl-graphics)
 
 (defparameter *window-width* 800)
 (defparameter *window-height* 600)
@@ -9,8 +9,14 @@
 (defparameter *terminal-width* nil)
 (defparameter *terminal-height* nil)
 
+;; Array of ascii ids into code page 437
 (defparameter *char-data* nil)
+
+;; Array of foreground color ids. (0-8) for black, red, green etc...
 (defparameter *fg-data* nil)
+
+;; Array of background color vectors. For flexibility and debugging (e.g. displaying dmaps)
+;;these are stored as raw colors instead of ids. 
 (defparameter *bg-data* nil)
 
 (defparameter *redraw-flag* t)
@@ -30,7 +36,7 @@
 	      (>= y *terminal-height*)
 	      (< x 0)
 	      (< y 0))
-    (let ((cell-id (cart-to-loc x y)))
+    (let ((cell-id (rl::cart-to-loc x y)))
       (setf (aref *char-data* cell-id) (char-int c))
       (setf (aref *fg-data* cell-id) (get-color-id (first color-pair)))
       ;;(setf (aref *bg-data* cell-id) (get-color-id (second color-pair)))
@@ -52,7 +58,7 @@
 (defun redraw()
   (loop for y from 0 to (- *terminal-height* 1) do 
        (loop for x from 0 to (- *terminal-width* 1) do
-	    (let* ((loc (cart-to-loc x y))
+	    (let* ((loc (rl::cart-to-loc x y))
 		   (cart-pos (gamekit:vec2 (* x *char-width*)
 					   (- *window-height* (* (+ y 1) *char-height*))))
 		   (c (aref *char-data* loc))
@@ -69,6 +75,41 @@
 				    :origin origin
 				    :width *char-width*
 				    :height *char-height*))))))
+
+
+;;; LOOKUPS AND UTILITY
+
+(defun get-color-id (color)
+  (cond ((equal color :black) 0)
+	((equal color :red) 1)
+	((equal color :green) 2)
+	((equal color :yellow) 3)
+	((equal color :blue) 4)
+	((equal color :magenta) 5)
+	((equal color :cyan) 6)
+	((equal color :white) 7)))
+
+(let ((spritesheet-names (list :curses-black
+			       :curses-red
+			       :curses-green
+			       :curses-yellow
+			       :curses-blue
+			       :curses-magenta
+			       :curses-cyan
+			       :curses-white)))
+  (defun get-spritesheet-name (id)
+    (nth id spritesheet-names)))
+
+(let ((color-vecs (list (gamekit:vec4 0 0 0 1)
+			(gamekit:vec4 0.5 0 0 1)
+			(gamekit:vec4 0 0.5 0 1)
+			(gamekit:vec4 0.5 0.5 0 1)
+			(gamekit:vec4 0 0 0.5 1)
+			(gamekit:vec4 0.5 0 0.5 1)
+			(gamekit:vec4 0 0.5 0.5 1)
+			(gamekit:vec4 0.5 0.5 0.5 1))))
+  (defun get-color-vec (id)
+    (nth id color-vecs)))
 
 ;;; DEMO STUFF
 

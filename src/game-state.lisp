@@ -29,25 +29,25 @@
 
 
 (defun state-title-screen ()
-  (clear-screen)
+  (rl-graphics:clear-screen)
   (let* ((title-text "TIDE")
-	 (x (- (truncate *terminal-width* 2) (truncate (length title-text) 2)))
-	 (y (truncate *terminal-height* 2)))
-    (set-string x y title-text))
+	 (x (- (truncate rl-graphics::*terminal-width* 2) (truncate (length title-text) 2)))
+	 (y (truncate rl-graphics::*terminal-height* 2)))
+    (rl-graphics::set-string x y title-text))
   #'state-game-normal)
 
 
 (defun state-game-error ()
-  (clear-screen)
+  (rl-graphics:clear-screen)
   (let* ((title-text "ERROR")
-	 (x (- (truncate *terminal-width* 2) (truncate (length title-text) 2)))
-	 (y (truncate *terminal-height* 2)))
-    (set-string x y title-text))
+	 (x (- (truncate rl-graphics::*terminal-width* 2) (truncate (length title-text) 2)))
+	 (y (truncate rl-graphics::*terminal-height* 2)))
+    (rl-graphics::set-string x y title-text))
   #'state-game-error)
 
 
 (defun state-game-normal ()
-  (clear-screen)
+  (rl-graphics:clear-screen)
   ;; We resolve input first and ultimate return its result
   (prog1
       ;; Resolve Input

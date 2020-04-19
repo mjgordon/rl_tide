@@ -39,7 +39,7 @@
 	       :position (cons 2 3)))
 
 (defun entity-ready-p (entity)
-  (= (mod *timer* (entity-stat-speed entity))
+  (= (mod (read-timer) (entity-stat-speed entity))
      0))
 
 (defun entity-update (entity)
@@ -54,15 +54,15 @@
     (move-entity-delta map entity dx dy)))
 	   
 (defun draw-player-stats (player)
-  (let ((x (- *terminal-width* 15)))
-    (set-string x 1 (entity-name player))
-    (set-string x 3 (format nil "HP : ~a" (player-hp player)))
-    (set-string x 4 (format nil "Speed : ~a" (player-stat-speed player)))
-    (set-string x 6 (format nil "Weapon : ~a" (player-slot-weapon player)))
-    (set-string x 7 (format nil "Head : ~a" (player-slot-head player)))
-    (set-string x 8 (format nil "Armor : ~a" (player-slot-armor player)))
-    (set-string x 9 (format nil "Boots : ~a" (player-slot-boots player)))
-    (set-string x 10 (format nil "Ring : ~a" (player-slot-ring player)))))
+  (let ((x (- rl-graphics::*terminal-width* 15)))
+    (rl-graphics:set-string x 1 (entity-name player))
+    (rl-graphics:set-string x 3 (format nil "HP : ~a" (player-hp player)))
+    (rl-graphics:set-string x 4 (format nil "Speed : ~a" (player-stat-speed player)))
+    (rl-graphics:set-string x 6 (format nil "Weapon : ~a" (player-slot-weapon player)))
+    (rl-graphics:set-string x 7 (format nil "Head : ~a" (player-slot-head player)))
+    (rl-graphics:set-string x 8 (format nil "Armor : ~a" (player-slot-armor player)))
+    (rl-graphics:set-string x 9 (format nil "Boots : ~a" (player-slot-boots player)))
+    (rl-graphics:set-string x 10 (format nil "Ring : ~a" (player-slot-ring player)))))
 
 
 (defun entity-die (entity)

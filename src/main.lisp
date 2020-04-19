@@ -4,8 +4,8 @@
 (defparameter *current-key* nil)
 
 (gamekit:defgame rl:gk-roguelike () ()
-		   (:viewport-width *window-width*)
-		   (:viewport-height *window-height*)
+		   (:viewport-width rl-graphics::*window-width*)
+		   (:viewport-height rl-graphics::*window-height*)
 		   (:viewport-title "TIDE"))
 
 (defun main()
@@ -26,17 +26,17 @@
 
 (defun startup()
   (gamekit:start 'gk-roguelike)
-  (setup-terminal)
+  (rl-graphics:setup-terminal)
   (setup-keyboard)
-  (setf *redraw-flag* t)
+  (setf rl-graphics::*redraw-flag* t)
   (setf *current-state* #'state-setup)
   (run-state))
 
 
 (defmethod gamekit:draw ((app gk-roguelike))
-  (when *redraw-flag*
-    (gamekit:draw-rect (gamekit:vec2 0 0) *window-width* *window-height* :fill-paint (gamekit:vec4 0 0 0 1))
-    (redraw)))
+  (when rl-graphics::*redraw-flag*
+    (gamekit:draw-rect (gamekit:vec2 0 0) rl-graphics::*window-width* rl-graphics::*window-height* :fill-paint (gamekit:vec4 0 0 0 1))
+    (rl-graphics:redraw)))
 
 
 (defun run-state ()

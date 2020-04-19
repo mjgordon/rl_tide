@@ -1,7 +1,6 @@
 (in-package :rl)
 
 (defparameter *world* nil)
-(defparameter *timer* 1)
 (defparameter *draw-dmap* t)
 
 (defstruct world
@@ -30,7 +29,7 @@
   "Redraws the current map, status messages, and player stats starting at (x,y), cropped to (width,height)"
   (redraw-map (world-current-map world) x y width height (world-offset world))
   (status-line-draw)
-  (set-string 0 0 (format nil "Timer : ~a" *timer*))
+  (rl-graphics:set-string 0 0 (format nil "Timer : ~a" (read-timer)))
   (draw-player-stats (world-player world)))
 
 (defun redraw-map (map x y width height offset)
@@ -41,8 +40,9 @@
 			 (let ((graphic (map-cell-graphic cell))
 			       ;;(color-pair (list (map-cell-color-fore cell) (map-cell-color-back cell)))
 			       (color-pair (list (map-cell-color-fore cell)
-						 (get-color-vec (get-color-id (map-cell-color-back cell)))))
+						 (rl-graphics::get-color-vec (rl-graphics::get-color-id (map-cell-color-back cell)))))
 			       (entity (map-cell-entity cell)))
+			   ;; Draws dmap bg instead. This is messy right now
 			   (when *draw-dmap*
 			     (let ((dmap-value (aref (game-map-dmap map) map-x map-y)))
 			       (when (= dmap-value 9999)
@@ -54,7 +54,7 @@
 			   (when entity
 			     (setf graphic (entity-graphic entity))
 			     (setf (first color-pair) (entity-color-fore entity)))
-			   (set-char id-x id-y graphic color-pair)))))
+			   (rl-graphics:set-char id-x id-y graphic color-pair)))))
 	       (+ x (car offset)) (+ y (cdr offset)) width height))
 
 (defun world-adjust-offset (world pos w h &optional (gutter 5))
@@ -91,4 +91,16 @@
 		       (entity-ready-p entity))
 	      (entity-update entity)))
 	  (world-entities world))
-    (incf *timer*)))
+    (inc-timer)))
+
+(let ((timer 1))
+  (defun read-timer ()
+    timer)
+
+  (defun reset-timer ()
+    (setf timer 1))
+
+  (defun inc-timer ()
+    (incf timer)))
+
+

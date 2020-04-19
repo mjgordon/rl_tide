@@ -21,7 +21,7 @@
     (unless (equal (length status-list) 0)
       (when (< (length status-list) count)
 	(setf count (length status-list)))
-      (loop for ypos from (- *terminal-height* 1) downto (- *terminal-height* count) and id from 0 do
-	   (set-string x ypos (nth id status-list)))))
+      (loop for ypos from (- rl-graphics::*terminal-height* 1) downto (- rl-graphics::*terminal-height* count) and id from 0 do
+	   (rl-graphics:set-string x ypos (nth id status-list)))))
     
 )
