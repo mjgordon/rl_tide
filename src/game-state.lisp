@@ -24,7 +24,7 @@
   (move-entity (world-current-map *world*) (world-player *world*) 2 3)
   (dotimes (i 10)
     (world-add-entity (make-entity :entity-type (lookup-entity-type 'orc)
-				   :position (cons 5 5))))
+				   :position (cons (random 55) (random 55)))))
   (state-title-screen))
 
 
@@ -73,7 +73,7 @@
     ;; Update world
     ;; Tick once, then keep ticking until its the players turn again
     ;; First we update the cost-map based on reacting to the player
-    (time (map-generate-dmap (world-current-map *world*) (world-player *world*)))
+    (map-generate-dmap (world-current-map *world*) (world-player *world*))
     (world-tick *world*)
     (loop until (entity-ready-p (world-player *world*)) do
 	 (world-tick *world*))

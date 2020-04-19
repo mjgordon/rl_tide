@@ -11,16 +11,17 @@
 
 (defun dmap-get-neighbor-values (dmap x y)
   (let ((output '())
+	(output-dirs '())
 	(dmap-width (first (array-dimensions dmap)))
 	(dmap-height (second (array-dimensions dmap))))
-    (mapc (lambda (dx dy)
-	    (let ((nx (+ x dx))
-		  (ny (+ y dy)))
-	      (when (rect-bounds-p nx ny dmap-width dmap-height)
-		(setf output (cons (aref dmap nx ny)
-				   output)))))
-	  *dx* *dy*)
-    output))
+    (loop for i from 0 below 8 do
+	 (let ((nx (+ x (nth i *dx*)))
+	       (ny (+ y (nth i *dy*))))
+	   (when (rect-bounds-p nx ny dmap-width dmap-height)
+	     (setf output (cons (aref dmap nx ny)
+				output))
+	     (setf output-dirs (cons i output-dirs)))))
+    (values output output-dirs)))
 	   
   
 
@@ -48,7 +49,7 @@
 	  (dmap-scan output game-map t (+ iterations 1)))
 	(progn
 	  ;;(print-hash-table (array-set-counts output))
-	  (format t "Iterations : ~a~%" iterations)
+	  ;(format t "Iterations : ~a~%" iterations)
 	  output))))
 
 		    

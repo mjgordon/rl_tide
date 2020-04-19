@@ -4,7 +4,7 @@
   entity-type
   (alive t)
   position
-  (behavior 'random)
+  (behavior 'attack)
   (hp 100)
   (stat-speed 10)
   (stat-attack 10))
@@ -44,7 +44,8 @@
 
 (defun entity-update (entity)
   (case (entity-behavior entity)
-    ('random (entity-move-random entity))))
+    (random (entity-move-random entity))
+    (attack (entity-track-player entity))))
 
 (defun entity-move-random (entity)
   (let* ((dir (random 8))
@@ -52,6 +53,19 @@
 	 (dy (nth dir *dy*))
 	 (map (world-current-map *world*)))
     (move-entity-delta map entity dx dy)))
+
+(defun entity-track-player (entity)
+  (multiple-value-bind (values dirs) (dmap-get-neighbor-values (game-map-dmap (world-current-map *world*))
+							       (car (entity-position entity))
+							       (cdr (entity-position entity)))
+    (let* ((least (apply #'min values))
+	   (dir-id (position least values))
+	   (dir (nth dir-id dirs)))
+      (move-entity-delta (world-current-map *world*)
+			 entity
+			 (nth dir *dx*)
+			 (nth dir *dy*)))))
+  
 	   
 (defun draw-player-stats (player)
   (let ((x (- rl-graphics::*terminal-width* 15)))
