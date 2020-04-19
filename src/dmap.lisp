@@ -2,7 +2,8 @@
 
 (defun make-dmap-blank (game-map)
   (let ((dmap (make-array (list (game-map-width game-map) (game-map-height game-map))
-			  :initial-element 99999)))
+			  :initial-element 9999
+			  :element-type '(mod 65536))))
     dmap))
 
 (defun dmap-set-value (dmap pos value)
@@ -12,13 +13,15 @@
   (let ((output '())
 	(dmap-width (first (array-dimensions dmap)))
 	(dmap-height (second (array-dimensions dmap))))
-    (loop for n from 0 below 8 do
-	 (let ((nx (+ x (nth n *dx*)))
-	       (ny (+ y (nth n *dy*))))
-	   (when (rect-bounds-p nx ny dmap-width dmap-height)
-	     (setf output (cons (aref dmap nx ny)
-				output)))))
+    (mapc (lambda (dx dy)
+	    (let ((nx (+ x dx))
+		  (ny (+ y dy)))
+	      (when (rect-bounds-p nx ny dmap-width dmap-height)
+		(setf output (cons (aref dmap nx ny)
+				   output)))))
+	  *dx* *dy*)
     output))
+	   
   
 
 (defun dmap-scan (dmap game-map &optional (recurse t) (iterations 0))
@@ -45,7 +48,7 @@
 	  (dmap-scan output game-map t (+ iterations 1)))
 	(progn
 	  ;;(print-hash-table (array-set-counts output))
-	  ;;(format t "Iterations : ~a~%" iterations)
+	  (format t "Iterations : ~a~%" iterations)
 	  output))))
 
 		    

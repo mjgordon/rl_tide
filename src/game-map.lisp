@@ -35,8 +35,10 @@
 			    :height h))
 	(empty-type (lookup-map-cell-type 'grass)))
     (setf (game-map-cells map)
-	  (loop repeat (game-map-size map)
-	       collect (make-map-cell :map-cell-type empty-type)))
+	  (let ((cells (make-array (game-map-size map))))
+	    (loop for i from 0 below (game-map-size map) do
+		 (setf (aref cells i) (make-map-cell :map-cell-type empty-type)))
+	    cells))
     map))
 				      
 (defun make-game-map-test ()
@@ -62,12 +64,14 @@ Calls function 'fun' with arguments (map-x map-y x-id y-id)"
 			 
 
 (defun get-cell (map x y)
-  (if (or (< x 0) (< y 0) (>= x (game-map-width map)) (>= y (game-map-height map)))
-      nil
-      (nth (+ x (* y (game-map-width map))) (game-map-cells map))))
+  (if (rect-bounds-p x y (game-map-width map) (game-map-height map))
+      (aref (game-map-cells map) (+ x (* y (game-map-width map))))
+      nil))
+
 
 (defun set-cell-type (map x y cell-type)
-  (setf (map-cell-map-cell-type (get-cell map x y)) (lookup-map-cell-type cell-type)))
+  (setf (map-cell-map-cell-type (get-cell map x y))
+	(lookup-map-cell-type cell-type)))
 		       
 
 (defun move-entity-delta (map entity dx dy)

@@ -72,6 +72,8 @@
     
     ;; Update world
     ;; Tick once, then keep ticking until its the players turn again
+    ;; First we update the cost-map based on reacting to the player
+    (time (map-generate-dmap (world-current-map *world*) (world-player *world*)))
     (world-tick *world*)
     (loop until (entity-ready-p (world-player *world*)) do
 	 (world-tick *world*))
