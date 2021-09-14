@@ -19,7 +19,7 @@
 ;;these are stored as raw colors instead of ids. 
 (defparameter *bg-data* nil)
 
-;; Part of a dirty dirty hack. See handle-drawing in main.lisp
+;; Controls 
 (defparameter *redraw-flag* 0)
 
 

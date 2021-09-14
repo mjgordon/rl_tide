@@ -9,18 +9,36 @@
 (defun dmap-set-value (dmap pos value)
   (setf (aref dmap (car pos) (cdr pos)) value))
 
+(defun dmap-get-least-neighbor (dmap x y)
+  (let ((least 9999)
+	(least-id -1))
+    (destructuring-bind (dwidth dheight) (array-dimensions dmap)
+      (mapc (lambda (dx dy did)
+	      (let ((nx (+ x dx))
+		    (ny (+ y dy)))
+		(when (rect-bounds-p nx ny dwidth dheight)
+		  (let ((value (aref dmap nx ny)))
+		    (when (< value least)
+		      (setf least value)
+		      (setf least-id did))))))
+	    *dx* *dy* *dids*))
+    (values least least-id)))
+	    
+	
+
 (defun dmap-get-neighbor-values (dmap x y)
   (let ((output '())
 	(output-dirs '())
 	(dmap-width (first (array-dimensions dmap)))
 	(dmap-height (second (array-dimensions dmap))))
-    (loop for i from 0 below 8 do
-	 (let ((nx (+ x (nth i *dx*)))
-	       (ny (+ y (nth i *dy*))))
-	   (when (rect-bounds-p nx ny dmap-width dmap-height)
-	     (setf output (cons (aref dmap nx ny)
-				output))
-	     (setf output-dirs (cons i output-dirs)))))
+    (mapc (lambda (dx dy did)
+	    (let ((nx (+ x dx))
+		  (ny (+ y dy)))
+	      (when (rect-bounds-p nx ny dmap-width dmap-height)
+		(setf output (cons (aref dmap nx ny)
+				   output))
+		(setf output-dirs (cons did output-dirs)))))
+	  *dx* *dy* *dids*)
     (values output output-dirs)))
 	   
   
@@ -35,8 +53,7 @@
 	   (loop for x from 0 below x-size do
 		(let ((cell (get-cell game-map x y)))
 		  (when (map-cell-passable cell)
-		    (let* ((neighbors (dmap-get-neighbor-values dmap x y))
-			   (least-neighbor (apply #'min neighbors))
+		    (let* ((least-neighbor (dmap-get-least-neighbor dmap x y))
 			   (value (aref dmap x y)))
 		      (if (> value (+ 1 least-neighbor))
 			  (progn

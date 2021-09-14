@@ -47,11 +47,12 @@
 			   (when *draw-dmap*
 			     (let ((dmap-value (aref (game-map-dmap map) map-x map-y)))
 			       (when (= dmap-value 9999)
-				 (setf dmap-value 255))
-			       (setf (second color-pair) (gamekit:vec4 (/ (- 255 dmap-value) 255.0)
-								      0
-								      (/ dmap-value 255.0)
-								      1))))
+				 (setf dmap-value 64))
+			       (let ((n (/ dmap-value 64)))
+				 (setf (second color-pair) (gamekit:vec4 n
+									 0
+									 (- 1 n)
+									 1)))))
 			   (when entity
 			     (setf graphic (entity-graphic entity))
 			     (setf (first color-pair) (entity-color-fore entity)))

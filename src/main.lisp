@@ -14,6 +14,7 @@
 
 
 (defun setup()
+  "Load graphics"
   (gamekit:register-resource-package :keyword "../data/")
   (gamekit:define-image :curses-black "curses_black.png")
   (gamekit:define-image :curses-red "curses_red.png")
@@ -52,12 +53,14 @@
 
 
 (defun run-state ()
+  "States are stored as function symbols, and either immediately or eventually via TC return
+ the name of the next function to be run"
   (setf *current-state* (funcall *current-state*)))
   
 
 (defun receive-key (key)
+  "Destination of keyboard bindings. Assumes the current state will react to the input"
   (setf *current-key* key)
-  ;;(status-line-add key)
   (run-state))
 
 (defun get-event ()
@@ -65,6 +68,7 @@
 
 
 (defun setup-keyboard()
+  "Create keyboard bindings"
   (gamekit:bind-any-button (lambda (key action)
 			     (when (or (equal action :PRESSED) (equal action :REPEATING))
 			       (receive-key key)))))
